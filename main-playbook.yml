@@ -6,11 +6,12 @@
 
       roles:
         - packages
+        - docker
+        - mail
         - ssh
         - password-quality
         - unattended-upgrades
         - firewall
-        - mail
         - clamav
         - rkhunter
         - auditd

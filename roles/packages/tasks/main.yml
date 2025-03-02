@@ -29,4 +29,5 @@
           - rkhunter
           - auditd
           - audispd-plugins
+          - vim
         state: present

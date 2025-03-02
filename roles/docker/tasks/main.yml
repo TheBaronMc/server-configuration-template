@@ -1,0 +1,51 @@
+    - name: update and upgrade
+      become: true
+      apt:
+        update_cache: yes
+        upgrade: yes
+
+    - name: Uninstall all conflicting packages
+      become: true
+      apt:
+        name:
+          - docker.io
+          - docker-doc
+          - docker-compose
+          - podman-docker
+          - containerd
+          - runc
+        state: "absent"
+
+    - name: install packages
+      become: true
+      apt:
+        name: 
+          - ca-certificates
+          - curl
+        state: present
+
+    - name: prepare docker installation
+      become: true
+      shell: |
+        install -m 0755 -d /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+        chmod a+r /etc/apt/keyrings/docker.asc
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    - name: update and upgrade
+      become: true
+      apt:
+        update_cache: yes
+        upgrade: yes
+
+    - name: install docker
+      become: true
+      apt:
+        name: 
+          - docker-ce
+          - docker-ce-cli 
+          - containerd.io 
+          - docker-buildx-plugin 
+          - docker-compose-plugin
+        state: present
+      notify: restart docker service
